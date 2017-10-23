@@ -26,7 +26,9 @@ ui <- fluidPage(
    )
 )
 
-server <- function(input, output) {}
+server <- function(input, output) {
+  source("analyze.R")
+}
 
 # Run the application 
 shinyApp(ui = ui, server = server)
