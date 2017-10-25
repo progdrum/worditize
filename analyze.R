@@ -1,13 +1,25 @@
 library(tidytext)
 library(readr)
 library(dplyr)
+library(stringr)
 library(purrr)
 library(ggplot2)
+library(gutenbergr)
 
 # Read in a file to process (and I should really do some preprocessing here!)
 slurp <- function(filename) {
   file_text <- read_file(filename)
   return(file_text)
+}
+
+# Get Project Gutenberg book by title based on ID
+get_book <- function(pg_title) {
+  pg_id <- gutenberg_metadata %>% 
+    filter(title == pg_title) %>% 
+    select(gutenberg_id)
+  book <- gutenberg_download(pg_id[[1]])
+  
+  return(book)
 }
 
 # Basic, initial text processing
