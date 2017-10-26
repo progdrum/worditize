@@ -77,23 +77,25 @@ get_bing_count <- function(words_sent) {
 
 # Plot the sentiment counts
 sentiment_counts <- function(ptext) {
-  nrc_plt <- get_nrc_count(ptext) %>% 
+  sents <- bind_sentiments(ptext)
+  
+  nrc_plt <- get_nrc_count(sents_nrc) %>% 
     top_n(10) %>% 
     ggplot(aes(word, n)) + 
     geom_col() + 
     coord_flip()
   
-  afinn_plt <- get_afinn_counts(ptext)$counts %>% 
+  afinn_plt <- get_afinn_counts(sents$afinn)$counts %>% 
     top_n(10) %>% 
     ggplot(aes(word, n)) + 
     geom_col() + 
     coord_flip()
   
-  bing_plt <- get_bing_count(ptext) %>% 
+  bing_plt <- get_bing_count(sents$bing) %>% 
     top_n(10) %>% 
     ggplot(aes(word, n)) + 
     geom_col() + 
     coord_flip()
   
-  return(plt)
+  return(nrc = nrc_plt, afinn = afinn_plt, bing = bing_plt)
 }
