@@ -1,32 +1,37 @@
-#
-# This is a Shiny web application. You can run the application by clicking
-# the 'Run App' button above.
-#
-# Find out more about building applications with Shiny here:
-#
-#    http://shiny.rstudio.com/
-#
-
 library(shiny)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
    
    # Application title
-   titlePanel("Get a Quick Readout of Some Text"),
+   titlePanel("Get a Quick Text Analysis of a Classic Book"),
    
    # Sidebar with a file input with text to analyze 
    sidebarLayout(
       sidebarPanel(
-         fileInput("file_select", "Select A File")
+        # Start with my basic crime and punishment test
+        actionButton("generate", "GO!")
       ),
       
       # Show the analysis
-      mainPanel()
+      mainPanel(
+        plotOutput("count_plt")
+      )
    )
 )
 
-server <- function(input, output) {}
+server <- function(input, output) {
+  source("analyze.R")
+  
+  # Respond to the button and generate the analysis
+  observeEvent(input$generate, {
+    txt <- get_book("Crime and Punishment")
+    tidy_book <- process_text(txt)
+    output$count_plt <- renderPlot({
+      word_counts(tidy_book)
+    })
+  })
+}
 
 # Run the application 
 shinyApp(ui = ui, server = server)
