@@ -4,6 +4,7 @@ library(dplyr)
 library(stringr)
 library(purrr)
 library(ggplot2)
+library(wordcloud)
 library(gutenbergr)
 
 # Read in a file to process (and I should really do some preprocessing here!)
@@ -48,9 +49,10 @@ bind_sentiments <- function(words) {
   # Use purrr and a parameter to facilitate arbitrary lexicons?
   nrc_sent <- inner_join(get_sentiments("nrc"), words)
   afinn_sent <- inner_join(get_sentiments("afinn"), words)
+  bing_sent <- inner_join(get_sentiments("bing"), words)
   
   # Return as a list
-  return(list(nrc = nrc_sent, afinn = afinn_sent))
+  return(list(nrc = nrc_sent, afinn = afinn_sent, bing = bing_sent))
 }
 
 # Get NRC sentiment count
@@ -63,6 +65,35 @@ get_afinn_counts <- function(words_sent) {
   total <- reduce(words_sent$score, `+`)
   avg <- mean(words_sent$score)
   med <- median(words_sent$score)
+  counts <- count(words_sent, score, sort = TRUE)
   
-  return(list(total = total, avg = avg, med = med))
+  return(list(total = total, avg = avg, med = med, counts = counts))
+}
+
+# Get Bing sentiment counts
+get_bing_count <- function(words_sent) {
+  return(count(words_sent, sentiment, sort = TRUE))
+}
+
+# Plot the sentiment counts
+sentiment_counts <- function(ptext) {
+  nrc_plt <- get_nrc_count(ptext) %>% 
+    top_n(10) %>% 
+    ggplot(aes(word, n)) + 
+    geom_col() + 
+    coord_flip()
+  
+  afinn_plt <- get_afinn_counts(ptext)$counts %>% 
+    top_n(10) %>% 
+    ggplot(aes(word, n)) + 
+    geom_col() + 
+    coord_flip()
+  
+  bing_plt <- get_bing_count(ptext) %>% 
+    top_n(10) %>% 
+    ggplot(aes(word, n)) + 
+    geom_col() + 
+    coord_flip()
+  
+  return(plt)
 }
