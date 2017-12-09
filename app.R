@@ -9,9 +9,6 @@ ui <- fluidPage(
    # Sidebar with a file input with text to analyze 
    sidebarLayout(
       sidebarPanel(
-        # Get the basic text processing done
-        actionButton("generate", "GO!"),
-        
         # A selector for choosing the kind of analysis to display
         selectInput("analyses", "Select One",
                     choices = c("Top 10 Words", "Sentiment Analysis"))
@@ -40,8 +37,7 @@ server <- function(input, output) {
   })
   
   # Respond to the button and generate the analysis
-  observeEvent(input$generate, {
-    # TODO: Figure out how to handle multiple plots versus one plot here
+  observeEvent(input$analyses, {
     output$count_plt <- renderPlot({
       analysis_options()
     })

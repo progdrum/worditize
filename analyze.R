@@ -3,6 +3,7 @@ library(tidyverse)
 library(stringr)
 library(wordcloud)
 library(gutenbergr)
+library(gridExtra)
 
 # Read in a file to process (and I should really do some preprocessing here!)
 slurp <- function(filename) {
@@ -76,23 +77,24 @@ get_bing_count <- function(words_sent) {
 sentiment_counts <- function(ptext) {
   sents <- bind_sentiments(ptext)
   
-  nrc_plt <- get_nrc_count(sents_nrc) %>% 
+  nrc_plt <- get_nrc_count(sents$nrc) %>% 
     top_n(10) %>% 
-    ggplot(aes(word, n)) + 
+    ggplot(aes(reorder(sentiment, n), n)) + 
     geom_col() + 
     coord_flip()
   
   afinn_plt <- get_afinn_counts(sents$afinn)$counts %>% 
     top_n(10) %>% 
-    ggplot(aes(word, n)) + 
+    ggplot(aes(reorder(score, n), n)) + 
     geom_col() + 
     coord_flip()
   
   bing_plt <- get_bing_count(sents$bing) %>% 
     top_n(10) %>% 
-    ggplot(aes(word, n)) + 
+    ggplot(aes(reorder(sentiment, n), n)) + 
     geom_col() + 
     coord_flip()
-  
-  return(nrc = nrc_plt, afinn = afinn_plt, bing = bing_plt)
+
+  return(grid.arrange(nrc_plt, afinn_plt, bing_plt, ncol = 1))  
+  # return(list(nrc = nrc_plt, afinn = afinn_plt, bing = bing_plt))
 }
