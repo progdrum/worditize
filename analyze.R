@@ -34,7 +34,7 @@ process_text <- function(file_text) {
 word_counts <- function(ptext) {
   plt <- count(ptext, word, sort = TRUE) %>% 
     top_n(10) %>% 
-    ggplot(aes(word, n)) + 
+    ggplot(aes(reorder(word, n), n)) + 
     geom_col() + 
     coord_flip()
   
