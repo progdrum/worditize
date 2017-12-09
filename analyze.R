@@ -1,9 +1,6 @@
 library(tidytext)
-library(readr)
-library(dplyr)
+library(tidyverse)
 library(stringr)
-library(purrr)
-library(ggplot2)
 library(wordcloud)
 library(gutenbergr)
 
