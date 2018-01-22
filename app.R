@@ -24,26 +24,25 @@ ui <- fluidPage(
 server <- function(input, output) {
   source("analyze.R")
   
-  # A reactive to handle different cases
-  analysis_options <- reactive({
+  # A reactive to run basic text processing
+  pre_process <- reactive({
     txt <- get_book("Crime and Punishment")
     tidy_book <- process_text(txt)
-    
-    if("Top 10 Words" %in% input$analyses) {
-      return(word_counts(tidy_book))
-    } else if("Sentiment Analysis" %in% input$analyses) {
-      return(sentiment_counts(tidy_book))
-    }
   })
   
   # Respond to the button and generate the analysis
   observeEvent(input$analyses, {
     output$count_plt <- renderPlot({
-      analysis_options()
+      pre_process()
+      
+      if("Top 10 Words" %in% input$analyses) {
+        return(word_counts(tidy_book))
+      } else if("Sentiment Analysis" %in% input$analyses) {
+        return(sentiment_counts(tidy_book))
+      }
     })
   })
 }
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
