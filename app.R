@@ -23,18 +23,12 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   source("analyze.R")
-  
-  # A reactive to run basic text processing
-  pre_process <- reactive({
-    txt <- get_book("Crime and Punishment")
-    tidy_book <- process_text(txt)
-  })
+  txt <- get_book("Crime and Punishment")
+  tidy_book <- process_text(txt)
   
   # Respond to the button and generate the analysis
   observeEvent(input$analyses, {
     output$count_plt <- renderPlot({
-      pre_process()
-      
       if("Top 10 Words" %in% input$analyses) {
         return(word_counts(tidy_book))
       } else if("Sentiment Analysis" %in% input$analyses) {
