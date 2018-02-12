@@ -5,7 +5,8 @@ ui <- fluidPage(
    titlePanel("Get a Quick Text Analysis of a Classic Book"),
    sidebarLayout(
       sidebarPanel(
-        textInput("book", "Enter the name of a book to analyze")
+        textInput("book", "Enter the name of a book to analyze"),
+        actionButton("gotime", "Go!")
       ),
       mainPanel(
         tabsetPanel(
@@ -20,11 +21,11 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   source("analyze.R")
-  txt <- get_book("Crime and Punishment")
-  tidy_book <- process_text(txt)
   
   # Respond to the button and generate the analysis
-  observeEvent(input$analyses, {
+  observeEvent(input$gotime, {
+    txt <- get_book(input$book)
+    tidy_book <- process_text(txt)
     output$plt <- renderPlot({word_counts(tidy_book)})
     output$sent <- renderPlot({sentiment_counts(tidy_book)})
     output$soon <- renderText({"Some really cool things are about to happen here!"})
