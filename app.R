@@ -2,21 +2,18 @@ library(shiny)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-   
-   # Application title
    titlePanel("Get a Quick Text Analysis of a Classic Book"),
-   
-   # Sidebar with a file input with text to analyze 
    sidebarLayout(
       sidebarPanel(
-        # A selector for choosing the kind of analysis to display
-        selectInput("analyses", "Select One",
-                    choices = c("Top 10 Words", "Sentiment Analysis"))
+        textInput("book", "Enter the name of a book to analyze")
       ),
-      
-      # Show the analysis
       mainPanel(
-        plotOutput("count_plt")
+        tabsetPanel(
+          id = "analyses",
+          tabPanel("Top N", plotOutput("plt")),
+          tabPanel("Sentiments", plotOutput("sent")),
+          tabPanel("Topic Analysis", textOutput("soon"))
+        )
       )
    )
 )
@@ -28,15 +25,10 @@ server <- function(input, output) {
   
   # Respond to the button and generate the analysis
   observeEvent(input$analyses, {
-    output$count_plt <- renderPlot({
-      if("Top 10 Words" %in% input$analyses) {
-        return(word_counts(tidy_book))
-      } else if("Sentiment Analysis" %in% input$analyses) {
-        return(sentiment_counts(tidy_book))
-      }
-    })
+    output$plt <- renderPlot({word_counts(tidy_book)})
+    output$sent <- renderPlot({sentiment_counts(tidy_book)})
+    output$soon <- renderText({"Some really cool things are about to happen here!"})
   })
 }
 
-# Run the application 
 shinyApp(ui = ui, server = server)
