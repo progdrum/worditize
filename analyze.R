@@ -37,7 +37,8 @@ word_counts <- function(ptext) {
     top_n(10) %>% 
     ggplot(aes(reorder(word, n), n)) + 
     geom_col() + 
-    coord_flip()
+    coord_flip() + 
+    labs(x = "Word", y = "Count")
   
   return(plt)
 }
@@ -81,20 +82,22 @@ sentiment_counts <- function(ptext) {
     top_n(10) %>% 
     ggplot(aes(reorder(sentiment, n), n)) + 
     geom_col() + 
-    coord_flip()
+    coord_flip() + 
+    labs(x = "Sentiment", y = "Count")
   
   afinn_plt <- get_afinn_counts(sents$afinn)$counts %>% 
     top_n(10) %>% 
-    ggplot(aes(reorder(score, n), n)) + 
+    ggplot(aes(score, n)) + 
     geom_col() + 
-    coord_flip()
+    coord_flip() + 
+    labs(x = "Sentiment", y = "Count")
   
   bing_plt <- get_bing_count(sents$bing) %>% 
     top_n(10) %>% 
     ggplot(aes(reorder(sentiment, n), n)) + 
     geom_col() + 
-    coord_flip()
+    coord_flip() + 
+    labs(x = "Sentiment", y = "Count")
 
   return(grid.arrange(nrc_plt, afinn_plt, bing_plt, ncol = 1))  
-  # return(list(nrc = nrc_plt, afinn = afinn_plt, bing = bing_plt))
 }
