@@ -1,22 +1,23 @@
 library(shiny)
+library(shinythemes)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
-   titlePanel("Get a Quick Text Analysis of a Classic Book"),
-   sidebarLayout(
-      sidebarPanel(
-        textInput("book", "Enter the name of a book to analyze"),
-        actionButton("gotime", "Go!")
-      ),
-      mainPanel(
-        tabsetPanel(
-          id = "analyses",
-          tabPanel("Top N", plotOutput("plt")),
-          tabPanel("Sentiments", plotOutput("sent")),
-          tabPanel("Topic Analysis", textOutput("soon"))
-        )
+  theme = shinytheme("sandstone"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput("book", "Enter the name of a book to analyze"),
+      actionButton("gotime", "Go!")
+    ),
+    mainPanel(
+      tabsetPanel(
+        id = "analyses",
+        tabPanel("Top N", plotOutput("plt")),
+        tabPanel("Sentiments", plotOutput("sent")),
+        tabPanel("Topic Analysis", textOutput("soon"))
       )
-   )
+    )
+  )
 )
 
 server <- function(input, output) {
