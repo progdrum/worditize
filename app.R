@@ -28,14 +28,20 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                                selectizeInput("book2",
                                               "Enter the name of the second book to compare:",
                                               choices = NULL),
-                               sliderInput("topic-slider", "Number of Topics to Find in Books:",
+                               sliderInput("topic_slider", "Number of Topics to Find in Books:",
                                            min = 1, max = 10, value = 5),
+                               numericInput("top_tops", "N Top Words to Display:",
+                                            min = 1, value = 10),
                                selectInput("algorithm", "Select the algorithm to use:",
                                            choices = c("LDA", "Pachinko"),
                                            selected = "LDA"),
                                actionButton("topics", "Get Topics")
                              ),
-                             mainPanel("Topic Analysis", textOutput("soon"))
+                             mainPanel(tabsetPanel(
+                               id = "topic_analyses",
+                               tabPanel("Topic Probabilities", plotOutput("betas")),
+                               tabPanel("Document Probabilities", tableOutput("doc_probs"))
+                             ))
                            ))
                 ))
 
@@ -50,17 +56,17 @@ server <- function(input, output, session) {
   updateSelectizeInput(session, "book",
                        choices = book_choices,
                        server = TRUE,
-                       options = list(maxOptions = 5,
+                       options = list(maxOptions = 10,
                                       placeholder = "Select a Document"))
   updateSelectizeInput(session, "book1",
                        choices = book_choices,
                        server = TRUE,
-                       options = list(maxOptions = 5,
+                       options = list(maxOptions = 10,
                                       placeholder = "Select a Document"))
   updateSelectizeInput(session, "book2",
                        choices = book_choices,
                        server = TRUE,
-                       options = list(maxOptions = 5,
+                       options = list(maxOptions = 10,
                                       placeholder = "Select a Document"))
   
   # Generate analyses for "counts and feels"
@@ -77,12 +83,17 @@ server <- function(input, output, session) {
   
   # Generate analysis for "topics"
   observeEvent(input$topics, {
-    book1_txt <- get_book(input$book1)
-    book2_txt <- get_book(input$book2)
-    output$soon <-
-      renderText({
-        "Some really cool things are about to happen here!"
-      })
+    pbooks <- process_books(c(input$book1, input$book2))
+    
+    # Figure out how to selectively work out the models here
+    topic_model <- get_books_lda(pbooks, input$topic_slider)
+
+    output$betas <- renderPlot({
+      topic_beta_graphs(topic_model, input$top_tops)
+    })
+    output$doc_probs <- renderTable({
+      topic_gamma_info(topic_model)
+    })
   })
 }
 

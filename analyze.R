@@ -1,7 +1,6 @@
 library(tidytext)
 library(tidyverse)
 library(stringr)
-library(wordcloud)
 library(gutenbergr)
 library(gridExtra)
 
