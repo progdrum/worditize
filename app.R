@@ -39,8 +39,18 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                              ),
                              mainPanel(tabsetPanel(
                                id = "topic_analyses",
-                               tabPanel("Topic Probabilities", plotOutput("betas")),
-                               tabPanel("Document Probabilities", tableOutput("doc_probs"))
+                               tabPanel("Topic Probabilities",
+                                        p("This tab lets you view the probabilities of words 
+                                          being generated from certain topics. The 'beta' value 
+                                          for a word is the probability of that word being 
+                                          generated from that topic."),
+                                        plotOutput("betas")),
+                               tabPanel("Document Probabilities",
+                                        p("This tab lets you view the probability that the words 
+                                          for a topic came from a given document. The gamma 
+                                          value is the probability that the words for the topic 
+                                          in the topic column came from that document."),
+                                        tableOutput("doc_probs"))
                              ))
                            ))
                 ))
