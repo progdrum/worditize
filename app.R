@@ -15,8 +15,14 @@ ui <- fluidPage(theme = shinytheme("sandstone"),
                              ),
                              mainPanel(tabsetPanel(
                                id = "analyses",
-                               tabPanel("Top N", plotOutput("plt")),
-                               tabPanel("Sentiments", plotOutput("sent"))
+                               tabPanel("Top 10",
+                                        p("The top 10 Words for the selected document appear 
+                                          here."),
+                                        plotOutput("plt")),
+                               tabPanel("Sentiments",
+                                        p("The sentiment scores for the selected document 
+                                          appear here."),
+                                        plotOutput("sent"))
                              ))
                            )),
                   tabPanel("Topics",

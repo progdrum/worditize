@@ -82,21 +82,24 @@ sentiment_counts <- function(ptext) {
     ggplot(aes(reorder(sentiment, n), n)) + 
     geom_col() + 
     coord_flip() + 
-    labs(x = "Sentiment", y = "Count")
+    labs(x = "Sentiment", y = "Count",
+         title = "NRC - Emotions")
   
   afinn_plt <- get_afinn_counts(sents$afinn)$counts %>% 
     top_n(10) %>% 
     ggplot(aes(score, n)) + 
     geom_col() + 
     coord_flip() + 
-    labs(x = "Sentiment", y = "Count")
+    labs(x = "Sentiment", y = "Count",
+         title = "AFINN - +/- Point Scale")
   
   bing_plt <- get_bing_count(sents$bing) %>% 
     top_n(10) %>% 
     ggplot(aes(reorder(sentiment, n), n)) + 
     geom_col() + 
     coord_flip() + 
-    labs(x = "Sentiment", y = "Count")
+    labs(x = "Sentiment", y = "Count",
+         title = "BING - +/-")
 
   return(grid.arrange(nrc_plt, afinn_plt, bing_plt, ncol = 1))  
 }
