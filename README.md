@@ -61,3 +61,7 @@ given document, as shown by the `gamma` value.
 I would like to make additional topic modeling algorithms available, likely by way of the 
 [RMallet](https://github.com/mimno/RMallet) package, which provides an R interface to the 
 `mallet` library written in Java.
+
+### Link
+
+Try me out at [shinyapps.io](https://progdrum.shinyapps.io/worditize/)!
